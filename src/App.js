@@ -1,23 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
 
 function App() {
+  const [ws, setWs] = useState(null);
+
+  useEffect(() => {
+    const wsClient = new WebSocket('ws://localhost:8080/ws');
+
+    wsClient.onopen = () => {
+      console.log('Connected to server');
+      setWs(wsClient);
+    };
+
+    wsClient.onclose = () => {
+      console.log('Disconnected from server');
+    };
+
+    wsClient.onmessage = e => {
+      console.log(`Received: ${e.data}`);
+    };
+
+    return () => {
+      wsClient.close();
+    };
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Console Logs</h1>
+      {/* Display logs here */}
     </div>
   );
 }
