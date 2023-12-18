@@ -1,33 +1,59 @@
 import React, { useEffect, useState } from 'react';
+import App_Stomp from './App_Stomp';
 
 function App() {
-  const [ws, setWs] = useState(null);
+
+  // test
+  const [bids, setBids] = useState([0]);
+ 
+  //map the first 5 bids
+  const firstBids = bids.map((item) => {
+    return (
+      <div>
+        <p> {item}</p>
+      </div>
+    );
+  });
 
   useEffect(() => {
-    const wsClient = new WebSocket('ws://localhost:8080/ws');
+    // test
+    const ws = new WebSocket("wss://ws.bitstamp.net");
 
-    wsClient.onopen = () => {
-      console.log('Connected to server');
-      setWs(wsClient);
+    const apiCall = {
+      event: "bts:subscribe",
+      data: { channel: "order_book_btcusd" },
+    };
+    
+    ws.onopen = (event) => {
+      ws.send(JSON.stringify(apiCall));
+    };
+  
+    ws.onmessage = function (event) {
+      const json = JSON.parse(event.data);
+      try {
+        if ((json.event = "data")) {
+          setBids(json.data.bids.slice(0, 5));
+        }
+      } catch (err) {
+        console.log(err);
+      }
     };
 
-    wsClient.onclose = () => {
-      console.log('Disconnected from server');
-    };
-
-    wsClient.onmessage = e => {
-      console.log(`Received: ${e.data}`);
-    };
 
     return () => {
-      wsClient.close();
+      
     };
   }, []);
 
   return (
     <div className="App">
-      <h1>Console Logs</h1>
-      {/* Display logs here */}
+      <div>
+        <App_Stomp />
+      </div>
+      <div>
+      <h3> Test WebSocket connection to wss://ws.bitstamp.net from a tetoriol </h3>
+        {firstBids}
+      </div>;
     </div>
   );
 }
