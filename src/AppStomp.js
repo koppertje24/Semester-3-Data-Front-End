@@ -11,16 +11,39 @@ class AppStomp extends React.Component {
     };
   };
 
+  sendMessage = (destination, body) => {
+    if(this.client.connected)
+    {
+      console.log('Send message to websocket',body);
+      this.client.publish({ destination, headers: {}, body: JSON.stringify(body) });
+    }
+  };
+
   componentDidMount() {
     let currentComponent = this;
+
     let onConnected = () => {
       console.log("Connected!!")
-      client.subscribe('/topic/message', function (msg) {
+      currentComponent.client.subscribe('/topic/message', function (msg) {
         if (msg.body) {
           var jsonBody = JSON.parse(msg.body);
-          if (jsonBody.message) {
-            currentComponent.setState({ messages: jsonBody.message })
+          var newMessage = '';
+
+          console.log("Raw data Message", jsonBody)
+
+          if (jsonBody.time) {
+            newMessage += 'time: ' + jsonBody.time;
           }
+
+          if (jsonBody.message) {
+            newMessage += 'Message: ' + jsonBody.message;
+          }
+          if (jsonBody.logs) {
+            newMessage += ' Logs: ' + jsonBody.logs;
+          }
+
+          console.log("Message received", newMessage)
+          currentComponent.setState({ messages: newMessage });
         }
       });
     }
@@ -38,6 +61,7 @@ class AppStomp extends React.Component {
       onDisconnect: onDisconnected
     });
 
+    this.client = client;
     client.activate();
   };
 
@@ -45,10 +69,12 @@ class AppStomp extends React.Component {
     return (
       <div>
         <div>{this.state.messages}</div>
+        <button onClick={() => this.sendMessage('/app/sendMessage', { message: 'Hello, server!' })}>
+          Send Message
+        </button>
       </div>
     );
   }
-
 }
 
 export default AppStomp;
