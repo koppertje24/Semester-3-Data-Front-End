@@ -3,7 +3,7 @@ import { Client } from '@stomp/stompjs';
 
 const SOCKET_URL = 'ws://localhost:8080/ws-message';
 
-class App_Stomp extends React.Component {
+class AppStomp extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -51,4 +51,4 @@ class App_Stomp extends React.Component {
 
 }
 
-export default App_Stomp;
+export default AppStomp;

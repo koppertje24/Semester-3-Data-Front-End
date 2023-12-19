@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import App_Stomp from './App_Stomp';
+import AppStomp from './AppStomp';
 
 function App() {
 
@@ -48,7 +48,7 @@ function App() {
   return (
     <div className="App">
       <div>
-        <App_Stomp />
+        <AppStomp />
       </div>
       <div>
       <h3> Test WebSocket connection to wss://ws.bitstamp.net from a tetoriol </h3>
