@@ -1,0 +1,31 @@
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+stages:
+  - build
+  - test
+  - deploy
+
+Front_build:
+  stage: build
+  before_script:
+    - npm install
+  script:
+    - npm run build
+
+Front_test:
+  stage: test
+  before_script:
+    - npm install
+  script:
+    - npm test
+
+Front_deploy:
+  stage: deploy
+  script:
+    - echo "deploy script here"
+  only:
+    - main
+
