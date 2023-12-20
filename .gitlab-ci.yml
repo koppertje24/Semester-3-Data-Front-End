@@ -8,7 +8,6 @@ stages:
   - build
   - test
   - sonarqube-check
-  - sonarqube-vulnerability-report
   - deploy
 
 Front_build:
@@ -52,20 +51,3 @@ sonarqube-check:
     - master
     - main
     - develop
-
-sonarqube-vulnerability-report:
-  stage: sonarqube-vulnerability-report
-  script:
-    - 'curl -u "${SONAR_TOKEN}:" "${SONAR_HOST_URL}/api/issues/gitlab_sast_export?projectKey=I517297_semester-3-data-front-end_AYyGYmdIYfOWsWXJQ1aw&branch=${CI_COMMIT_BRANCH}&pullRequest=${CI_MERGE_REQUEST_IID}" -o gl-sast-sonar-report.json'
-  allow_failure: true
-  only:
-    - merge_requests
-    - master
-    - main
-    - develop
-  artifacts:
-    expire_in: 1 day
-    reports:
-      sast: gl-sast-sonar-report.json
-  dependencies:
-    - sonarqube-check
