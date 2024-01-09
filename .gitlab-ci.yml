@@ -24,13 +24,6 @@ Front_test:
   script:
     - npm test
 
-Front_deploy:
-  stage: deploy
-  script:
-    - echo "deploy script here"
-  only:
-    - main
-
 sonarqube-check:
   stage: sonarqube-check
   image: 
@@ -51,3 +44,10 @@ sonarqube-check:
     - master
     - main
     - develop
+
+Front_deploy:
+  stage: deploy
+  script:
+    - echo "deploy script here"
+  only:
+    - main
